@@ -2,6 +2,7 @@ ARG APP_VERSION=0.0.0-SNAPSHOT
 ARG APP_GID=5000
 ARG APP_UID=5000
 ARG APP_ENV=prod
+ARG TINI_BINARY=tini
 ARG TINI_VERSION=v0.19.0
 
 ## Build stage
@@ -37,8 +38,9 @@ ENV RUST_LOG=info
 WORKDIR /app
 
 # Add tini to properly handle signals
+ARG TINI_BINARY
 ARG TINI_VERSION
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/${TINI_BINARY} /tini
 RUN chmod +x /tini
 
 # Add non-root user
