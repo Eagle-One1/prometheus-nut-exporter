@@ -38,7 +38,7 @@ WORKDIR /app
 
 # Add tini to properly handle signals
 ARG TINI_VERSION
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}-${TARGETPLATFORM##*/}/tini /tini
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}-$(printf '%s' "$TARGETPLATFORM" | sed -e 's#linux/##')/tini /tini
 RUN chmod +x /tini
 
 # Add non-root user
