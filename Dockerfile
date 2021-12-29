@@ -2,7 +2,7 @@ ARG APP_VERSION=0.0.0-SNAPSHOT
 ARG APP_GID=5000
 ARG APP_UID=5000
 ARG APP_ENV=prod
-ARG TINI_BINARY=tini
+ARG TARGETPLATFORM=linux/amd64
 ARG TINI_VERSION=v0.19.0
 
 ## Build stage
@@ -31,16 +31,19 @@ then cargo rustc --release -- -D warnings; \
 else cargo rustc --release; \
 fi
 
+ARG TARGETPLATFORM
+# Add tini to properly handle signals
+ARG TINI_VERSION
+RUN curl --fail "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${ARCH}" \
+        --output tini
+
 ## Runtime stage
 FROM debian:10-slim AS runtime
 # Default log level
 ENV RUST_LOG=info
 WORKDIR /app
 
-# Add tini to properly handle signals
-ARG TINI_BINARY
-ARG TINI_VERSION
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/${TINI_BINARY} /tini
+COPY --from=build /app/tini /tini
 RUN chmod +x /tini
 
 # Add non-root user
