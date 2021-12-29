@@ -1,3 +1,4 @@
+ARG ARCH=amd64
 ARG APP_VERSION=0.0.0-SNAPSHOT
 ARG APP_GID=5000
 ARG APP_UID=5000
@@ -31,8 +32,8 @@ then cargo rustc --release -- -D warnings; \
 else cargo rustc --release; \
 fi
 
-ARG TARGETPLATFORM
 # Add tini to properly handle signals
+ARG ARCH
 ARG TINI_VERSION
 RUN curl --fail "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${ARCH}" \
         --output tini
