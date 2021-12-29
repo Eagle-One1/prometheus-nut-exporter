@@ -33,7 +33,7 @@ fi
 ARG TARGETPLATFORM
 # Download tini binary depending on target platform
 ARG TINI_VERSION
-RUN curl --silent "https://github.com/krallin/tini/releases/download/${TINI_VERSION}-${TARGETPLATFORM##*/}/tini" \
+RUN curl --fail --silent "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${TARGETPLATFORM##*/}" \
         --output tini
 RUN echo ${TARGETPLATFORM}
 RUN echo ${TARGETPLATFORM##*/}
