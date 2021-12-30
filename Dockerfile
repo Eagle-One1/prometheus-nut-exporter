@@ -35,6 +35,7 @@ fi
 # Add tini to properly handle signals
 ARG ARCH
 ARG TINI_VERSION
+RUN echo "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${ARCH}"
 RUN curl --fail "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${ARCH}" \
         --output tini
 
