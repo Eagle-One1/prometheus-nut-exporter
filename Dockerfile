@@ -29,7 +29,8 @@ RUN echo "Build env: $APP_ENV"; \
 if [ "$APP_ENV" = "prod" ]; \
 then cargo rustc --release -- -D warnings; \
 else cargo rustc --release; \
-fail
+fi
+
 # Download tini binary depending on target platform
 ARG TINI_VERSION
 RUN curl -L --fail "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-arm64" \
