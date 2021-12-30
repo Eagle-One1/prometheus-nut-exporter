@@ -1,9 +1,8 @@
-ARG ARCH=amd64
 ARG APP_VERSION=0.0.0-SNAPSHOT
 ARG APP_GID=5000
 ARG APP_UID=5000
 ARG APP_ENV=prod
-ARG TARGETPLATFORM=linux/amd64
+ARG ARCH=amd64
 ARG TINI_VERSION=v0.19.0
 
 ## Build stage
@@ -30,13 +29,10 @@ RUN echo "Build env: $APP_ENV"; \
 if [ "$APP_ENV" = "prod" ]; \
 then cargo rustc --release -- -D warnings; \
 else cargo rustc --release; \
-fi
-
-# Add tini to properly handle signals
-ARG ARCH
+fail
+# Download tini binary depending on target platform
 ARG TINI_VERSION
-RUN echo "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${ARCH}"
-RUN curl --fail "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${ARCH}" \
+RUN curl -L --fail "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-arm64" \
         --output tini
 
 ## Runtime stage
@@ -45,6 +41,7 @@ FROM debian:10-slim AS runtime
 ENV RUST_LOG=info
 WORKDIR /app
 
+# Add tini to properly handle signals
 COPY --from=build /app/tini /tini
 RUN chmod +x /tini
 
